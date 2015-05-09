@@ -11,6 +11,8 @@ So expect a big download if you do decide to use this.
 * Golang devenv, a go environment set up with some tools like gb, dlv to work on go code
   * generic image (godev)
   * personalized environment with my vim setup (mygodev)
+* packer to build vagrant boxes with an arch linux install
+* Vagrant to set up an arch base image with docker
 
 ## Running
 
@@ -28,3 +30,12 @@ docker run -dit \
   -e SSH_AUTH_SOCK=/var/run/ssh-auth.sock \
   casualjim/mygodev
 ```
+
+To use:
+
+```bash
+docker exec -it godev zsh
+```
+
+
+

@@ -21,11 +21,13 @@ sgdisk -n 1:2048:+2M -c 1:"BIOS Boot Partition" -t 1:ef02 ${DISK}
 
 bpn=2
 rpn=3
+extrapkgs=
 if [ -d /sys/firmware/efi ]; then
   echo "===> efi partition"
   sgdisk -n 2:`sgdisk -F ${DISK}`:+200M -c 2:"EFI System Partition" -t 2:ef00 ${DISK}
   bpn=3
   rpn=4
+  extrapkgs=(efibootmgr efivar)
   mkfs.vfat -F32 ${DISK}2
 fi
 
@@ -55,7 +57,7 @@ if [ -d /sys/firmware/efi ]; then
 fi
 
 echo "==> installing minimal base for provisioning"
-pacstrap /mnt base base-devel btrfs-progs grub efibootmgr efivar zsh openssh
+pacstrap /mnt base base-devel btrfs-progs grub zsh openssh ${extrapkgs[*]}
 
 # generate fstab
 echo "===> generating file system tables"
@@ -77,4 +79,3 @@ echo "==> unmounting filesystems"
 sync
 umount -R /mnt
 systemctl reboot
-

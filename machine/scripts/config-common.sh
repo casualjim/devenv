@@ -1,5 +1,6 @@
 PASSWORD=$(/usr/bin/openssl passwd -crypt 'vagrant')
 
+pacman -S --noconfirm git vim
 cp -a /tmp/common/* /
 
 echo "===> creating vagrant user"

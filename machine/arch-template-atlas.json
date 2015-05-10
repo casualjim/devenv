@@ -54,9 +54,12 @@
 	"provisioners": [{
 		"type": "shell",
 		"script": "vbox/configure.sh",
-		"only": ["virtualbox-iso"],
-		"execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'"
-	}],
+		"only": ["virtualbox-iso"]
+  },{
+    "type": "shell", 
+    "inline": "pacman -S --noconfirm open-vm-tools",
+    "only": ["vmware-iso"]
+  }],
 	"post-processors": [
 		[{
 			"type": "vagrant",

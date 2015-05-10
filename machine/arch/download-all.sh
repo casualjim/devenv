@@ -9,4 +9,3 @@ curl -L'#' -O https://dl.dropboxusercontent.com/u/21717/arch/poweroff.timer
 
 chmod +x *.sh
 #DISK=/dev/vda ./prepare-machine.sh
-

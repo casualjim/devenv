@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "=> Preparing Arch VM"
 echo ""
@@ -25,16 +25,13 @@ extrapkgs=
 if [ -d /sys/firmware/efi ]; then
   echo "===> efi partition"
   sgdisk -n 2:`sgdisk -F ${DISK}`:+200M -c 2:"EFI System Partition" -t 2:ef00 ${DISK}
-  bpn=3
-  rpn=4
-  extrapkgs=(efibootmgr efivar)
+  extrapkgs=(efibootmgr)
   mkfs.vfat -F32 ${DISK}2
+else
+  echo "===> bios partition"
+  sgdisk -n $bpn:`sgdisk -F ${DISK}`:+100M -c $bpn:"Linux /boot" -t $bpn:8300 ${DISK}
+  mkfs.ext4 ${DISK}$bpn
 fi
-
-echo "===> boot partition"
-sgdisk -n $bpn:`sgdisk -F ${DISK}`:+100M -c $bpn:"Linux /boot" -t $bpn:8300 ${DISK}
-mkfs.ext4 ${DISK}$bpn
-
 
 echo "===> root partition"
 sgdisk -N $rpn -c $rpn:"Linux root" -t $rpn:8300 ${DISK}
@@ -57,15 +54,27 @@ if [ -d /sys/firmware/efi ]; then
 fi
 
 echo "==> installing minimal base for provisioning"
-pacstrap /mnt base base-devel btrfs-progs grub zsh openssh ${extrapkgs[*]}
+pacstrap /mnt base base-devel btrfs-progs syslinux zsh openssh yaourt gptfdisk dosfstools intel-ucode ${extrapkgs[*]}
+if [ $? -ne 0 ]; then
+  echo "ERROR! pacstrap  failed!" >&2
+  exit 1
+fi
 
 # generate fstab
+mkdir -p /mnt/etc
 echo "===> generating file system tables"
 genfstab -U -p /mnt >> /mnt/etc/fstab
 echo ""
 
 install --mode=0755 install-stage-1.sh /mnt
 arch-chroot /mnt /bin/bash /install-stage-1.sh
+
+echo "===> configuring bootloader"
+syslinux-install_update -iam -c /mnt
+sed -i "s|TIMEOUT.*|TIMEOUT 0|g" /mnt/boot/syslinux/syslinux.cfg
+sed -i "s/^UI/#UI/g" /mnt/boot/syslinux/syslinux.cfg
+sed -i "s|root=/dev/sda3 rw|root=${DISK}$rpn|g" /mnt/boot/syslinux/syslinux.cfg
+sed -i "s|quiet|quiet loglevel=3 vga=current|g" /mnt/boot/syslinux/syslinux.cfg
 
 # http://comments.gmane.org/gmane.linux.arch.general/48739
 echo '==> adding workaround for shutdown race condition'

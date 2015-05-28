@@ -1,0 +1,2 @@
+Server = https://mirrors.kernel.org/archlinux/$repo/os/$arch
+Server = http://mirrors.cdndepo.com/archlinux/$repo/os/$arch

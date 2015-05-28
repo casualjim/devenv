@@ -10,20 +10,18 @@ export GOROOT=/usr/src/go
 mkdir -p $GOPATH/src
 export PATH=$GOPATH/bin:$PATH
 
-git clone --recursive https://github.com/casualjim/dot-files $HOME/dot-files
-
 curr_dir=$HOME/dot-files
+git clone --recursive https://github.com/casualjim/dot-files $curr_dir
+
 cd $curr_dir
 ln -sf ${curr_dir}/vimreboot $HOME/.vim
 ln -sf ${curr_dir}/vimreboot/vimrc $HOME/.vimrc
 ln -sf ${curr_dir}/ctags $HOME/.ctags
-ln -sf ${curr_dir}/antigen $HOME/.antigen
 ln -sf ${curr_dir}/zshrc $HOME/.zshrc
 ln -sf ${curr_dir}/.tmux.conf $HOME/.tmux.conf
 ln -sf ${curr_dir}/gitconfig $HOME/.gitconfig
 
 echo "
-antigen theme https://gist.github.com/7585b6aa8d4770866af4.git backchat-remote
 export GOROOT=/usr/src/go
 " >> $HOME/.zshrc.local
 

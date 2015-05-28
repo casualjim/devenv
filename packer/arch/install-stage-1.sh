@@ -29,10 +29,10 @@ systemctl enable systemd-networkd.service
 echo '
 # See resolved.conf(5) for details
 [Resolve]
-#DNS=
-FallbackDNS=8.8.8.8 8.8.4.4 2001:4860:4860::8888 2001:4860:4860::8844
+DNS=8.8.8.8 8.8.4.4
+FallbackDNS=2001:4860:4860::8888 2001:4860:4860::8844
 #LLMNR=yes
-'
+' > /etc/systemd/resolved.conf
 systemctl enable systemd-resolved.service
 
 # install ssh server

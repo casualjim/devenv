@@ -38,6 +38,7 @@ systemctl enable systemd-resolved.service
 # install ssh server
 echo "===> configuring ssh server"
 sed -i 's/#UseDNS yes/UseDNS no/' /etc/ssh/sshd_config
+echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 systemctl enable sshd.service
 
 echo "===> setting root password"

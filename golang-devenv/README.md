@@ -14,6 +14,6 @@ It's meant to run as a daemon container in which you exec to your shell. The dae
 You can of course just run the container with a shell as command but it has some issues wrt to zombie processes.
 
 ```
-GOROOT=/usr/src/go
-GOPATH=/usr/local/go
+GOROOT=/usr/local/go
+GOPATH=/usr/local/share/go
 ```

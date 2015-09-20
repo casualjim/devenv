@@ -3,12 +3,13 @@ cd $HOME
 
 set -e
 set -x
-rm -rf $HOME/.vimrc $HOME/.vim $HOME/.antigen $HOME/.emacs.d $HOME/.oh-my-zsh $HOME/.zshrc
 
 export GOPATH=$HOME/go
-export GOROOT=/usr/src/go
+export GOROOT=/usr/local/go
 mkdir -p $GOPATH/src
 export PATH=$GOPATH/bin:$PATH
+
+sudo git clone https://github.com/tarjoilija/zgen /usr/share/zsh/scripts/zgen
 
 curr_dir=$HOME/dot-files
 git clone --recursive https://github.com/casualjim/dot-files $curr_dir
@@ -22,7 +23,7 @@ ln -sf ${curr_dir}/.tmux.conf $HOME/.tmux.conf
 ln -sf ${curr_dir}/gitconfig $HOME/.gitconfig
 
 echo "
-export GOROOT=/usr/src/go
+export GOROOT=/usr/local/go
 " >> $HOME/.zshrc.local
 
 echo '
@@ -45,7 +46,7 @@ env
 # this sources the vimrc which triggers the install of all the plugins
 script -qc "vim -e +qall" /dev/null > /dev/null
 cd $HOME/.vim/bundle/YouCompleteMe
-./install.sh --clang-completer --gocode-completer
+./install.py --clang-completer --gocode-completer
 set +x
 set +e
 . $HOME/.zshrc

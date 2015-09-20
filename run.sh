@@ -2,7 +2,7 @@
 
 docker run -dit \
   --name godev  \
-  -u `id -u`:`id -g` \
+  -u `id -un`:`id -un` \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -e DOCKER_HOST=unix:///var/run/docker.sock \
   -v $GOPATH/src:/home/ivan/go/src \

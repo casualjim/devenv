@@ -24,6 +24,8 @@ apt-get install -qq -y --no-install-recommends \
   tmux ncurses-term exuberant-ctags vim-nox httpie direnv
 
 ln -sf /usr/bin/nodejs /usr/bin/node
+curl -L'#' https://github.com/github/hub/releases/download/v2.2.1/hub-linux-amd64-2.2.1.tar.gz | sudo tar -C /tmp -xz
+mv /tmp/hub-l*/hub /usr/local/bin
 
 echo '
 ---
@@ -38,18 +40,18 @@ gem: --no-ri --no-rdoc
 npm -g install jshint jslint jsonlint js-yaml
 gem install mdl
 
-chmod +x /usr/bin/go-wrapper /usr/bin/docker /tmp/gonative
-/tmp/gonative build --target /usr/src/go
-export PATH=/usr/src/go/bin:$PATH
-
-export GOPATH=/usr/local/go
-mkdir -p $GOPATH/src
+chmod +x /usr/bin/docker
+curl -sL https://storage.googleapis.com/golang/go${GOLANG_VERSION}.linux-amd64.tar.gz | tar -C /usr/local -xz
 export PATH=/usr/local/go/bin:$PATH
 
+export GOPATH=/usr/local/share/go
+mkdir -p $GOPATH/src
+export PATH=/usr/local/share/go/bin:$PATH
+
 echo '
-export GOPATH=/usr/local/go
-export GOROOT=/usr/src/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+export GOPATH=/usr/local/share/go
+export GOROOT=/usr/local/go
+export PATH=$GOPATH/bin:$PATH:$GOROOT/bin
 ' > /etc/profile.d/golang.sh
 
 go get -u github.com/golang/lint/golint
@@ -57,12 +59,11 @@ go get -u golang.org/x/tools/cmd/...
 go get -u github.com/tools/godep
 go get -u github.com/jteeuwen/go-bindata/...
 go get -u github.com/elazarl/go-bindata-assetfs/...
-go get -u github.com/redefiance/go-find-references
 go get -u github.com/sqs/goreturns
 go get -u github.com/pquerna/ffjson
 go get -u github.com/clipperhouse/gen
-go get -u code.google.com/p/gomock/gomock
-go get -u code.google.com/p/gomock/mockgen
+go get -u github.com/golang/mock/gomock
+go get -u github.com/golang/mock/mockgen
 go get -u github.com/axw/gocov/gocov
 go get -u gopkg.in/matm/v1/gocov-html
 go get -u github.com/AlekSi/gocov-xml
@@ -71,7 +72,6 @@ go get -u github.com/kisielk/errcheck
 go get -u github.com/jstemmer/gotags
 go get -u github.com/smartystreets/goconvey
 go get -u github.com/rogpeppe/godef
-go get -u github.com/github/hub
 go get -u github.com/mitchellh/gox
 go get -u github.com/constabulary/gb/...
 go get -u github.com/derekparker/delve/cmd/dlv

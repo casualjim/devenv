@@ -15,13 +15,13 @@ systemctl enable dkms.service
 # systemctl reboot
 
 
-# mkdir -p /vagrant /mnt/hgfs
-# cd /usr/src
-# mkdir -p /etc/init.d/rc{0,1,2,3,4,5,6}.d
-# git clone https://github.com/rasa/vmware-tools-patches.git
-# cd vmware-tools-patches
-# ./download-tools.sh 7.1.1
-# ./untar-all-and-patch.sh
-# ./compile.sh || true
+mkdir -p /vagrant /mnt/hgfs
+cd /usr/src
+mkdir -p /etc/init.d/rc{0,1,2,3,4,5,6}.d
+git clone https://github.com/rasa/vmware-tools-patches.git
+cd vmware-tools-patches
+./download-tools.sh 8.0.0
+./untar-all-and-patch.sh
+./compile.sh || true
 
 echo 'MODULES="$MODULES vsock vmw_vsock_vmci_transport vmw_balloon vmw_vmci vmwgfx vmhgfs"' >> /etc/mkinitcpio.conf

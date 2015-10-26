@@ -114,8 +114,6 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
   go get -u github.com/jteeuwen/go-bindata/...
   go get -u github.com/elazarl/go-bindata-assetfs/...
   ppsuccess "====> installed bindata"
-  go get -u github.com/redefiance/go-find-references
-  ppsuccess "====> installed find-references"
   go get -u github.com/sqs/goreturns
   ppsuccess "====> installed goreturns"
   go get -u github.com/pquerna/ffjson
@@ -142,8 +140,6 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
   go get -u github.com/gogo/protobuf/protoc-gen-gogo
   go get -u github.com/gogo/protobuf/gogoproto
   ppsuccess "====> installed gogoproto"
-  go get -u github.com/github/hub
-  ppsuccess "====> installed hub"
   go get -u github.com/mitchellh/gox
   ppsuccess "====> installed gox"
   go get -u github.com/derekparker/delve/cmd/dlv

@@ -1,6 +1,71 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+module OS
+  def OS.windows?
+    (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+  end
+
+  def OS.mac?
+   (/darwin/ =~ RUBY_PLATFORM) != nil
+  end
+
+  def OS.unix?
+    !OS.windows?
+  end
+
+  def OS.linux?
+    OS.unix? and not OS.mac?
+  end
+end
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] ||= OS.mac? ? 'vmware_appcatalyst' : "vmware_workstation"
+
+fusion_path="/Applications/VMware Fusion.app/Contents/Library"
+if File.directory?(fusion_path)
+  ENV['PATH'] = "#{fusion_path}:#{ENV['PATH']}"
+end
+
+appcatalyst_path="/opt/vmware/appcatalyst/libexec"
+if File.directory?(appcatalyst_path)
+  ENV['PATH'] = "#{appcatalyst_path}:#{ENV['PATH']}"
+end
+
+# Hey Now! thanks StackOverflow: http://stackoverflow.com/a/28801317/1233435
+req_plugins = %w(vagrant-triggers
+                 vagrant-guests-photon)
+
+if OS.mac?
+  req_plugins << "vagrant-vmware-fusion" if File.directory?(fusion_path)
+  req_plugins << "vagrant-vmware-appcatalyst" if File.directory?(appcatalyst_path)
+else
+  req_plugins << "vagrant-vmware-workstation"
+end
+
+# Cycle through the required plugins and install what's missing.
+plugins_install = req_plugins.select { |plugin| !Vagrant.has_plugin? plugin }
+licensed_plugins = plugins_install.select { |plugin| plugin =~ /vagrant-vmware-(?:fusion|workstation)$/ }
+licensed_plugins.each do |plugin|
+  unless File.exist? "#{ENV["VAGRANT_VMWARE_LICENSE_FILE"]||"./#{plugin}.lic"}"
+    abort "Failed to configure license, you can configure the path with VAGRANT_VMWARE_LICENSE_FILE"
+  end
+end
+
+unless plugins_install.empty?
+  puts "Installing plugins: #{plugins_install.join(' ')}"
+  if system "vagrant plugin install #{plugins_install.join(' ')}"
+    exec "vagrant #{ARGV.join(' ')}"
+  else
+    abort 'Installation of one or more plugins has failed. Aborting.'
+  end
+end
+
+licensed_plugins.each do |plugin|
+  unless system "vagrant plugin license #{plugin} #{ENV["VAGRANT_VMWARE_LICENSE_FILE"]||"./#{plugin}.lic"}"
+    abort "Failed to configure license, you can configure the path with VAGRANT_VMWARE_LICENSE_FILE"
+  end
+end
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -50,9 +115,15 @@ Vagrant.configure(2) do |config|
   end
 
 
-  config.vm.provider "vmware_workstation" do |vmw|
-    vmw.vmx["memsize"] = "2048"
-    vmw.vmx["numvcpus"] = "2"
+  %w(vmware_workstation vmware_fusion vmware_appcatalyst).each do |vmw_p|
+    config.vm.provider vmw_p do |vmw|
+      vmw.vmx["memsize"] = "2048"
+      vmw.vmx["numvcpus"] = "2"
+
+      # Use paravirtualized virtual hardware on VMW hypervisors
+      vmw.vmx['ethernet0.virtualDev'] = 'vmxnet3'
+      vmw.vmx['scsi0.virtualDev'] = 'pvscsi'
+    end
   end
 
   #

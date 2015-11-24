@@ -119,10 +119,6 @@ Vagrant.configure(2) do |config|
     config.vm.provider vmw_p do |vmw|
       vmw.vmx["memsize"] = "2048"
       vmw.vmx["numvcpus"] = "2"
-
-      # Use paravirtualized virtual hardware on VMW hypervisors
-      vmw.vmx['ethernet0.virtualDev'] = 'vmxnet3'
-      vmw.vmx['scsi0.virtualDev'] = 'pvscsi'
     end
   end
 

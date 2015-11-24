@@ -1,9 +1,9 @@
 {
 	"variables": {
-		"iso_url": "https://mirrors.kernel.org/archlinux/iso/2015.09.01/archlinux-2015.09.01-dual.iso",
-		"iso_checksum": "4eb065d1b7639846703422a30c622eae0a558622",
+		"iso_url": "http://mirrors.kernel.org/archlinux/iso/2015.11.01/archlinux-2015.11.01-dual.iso",
+		"iso_checksum": "de1876320317586ec84259df3bc3cfbafcf3242c",
 		"iso_checksum_type": "sha1",
-		"version": "0.2.2",
+		"version": "0.2.3",
 		"vagrant_cloud_token": "{{env `ATLAS_TOKEN`}}"
 	},
 	"push": {

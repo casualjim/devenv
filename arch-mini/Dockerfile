@@ -2,7 +2,7 @@ FROM scratch
 
 MAINTAINER "Ivan Porto Carrero <ivan@flanders.co.nz>"
 
-ADD ./arch-mini-bootstrap_2015-05-26.tar.xz /
+ADD ./arch-mini-bootstrap_2015-11-23.tar.xz /
 ADD files/mirrorlist /etc/pacman.d/
 ADD files/locale.conf files/pacman.conf /etc/
 RUN chown 'root:root' /etc/{pacman.d/mirrorlist,locale.conf,pacman.conf} && \

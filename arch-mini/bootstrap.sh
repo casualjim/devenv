@@ -19,7 +19,7 @@ arrow="\033[1;34m=>\033[m"
 
 ROOTFS="$DIR/rootfs"
 
-echo -e "${arrow} Preparing Minimal Arch Container Root FS"
+echo -e "${arrow} Preparing Minimal Arch Container Root FS @ ${ROOTFS}"
 echo ""
 
 umask 022

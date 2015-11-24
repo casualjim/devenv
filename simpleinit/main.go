@@ -113,7 +113,7 @@ func main() {
 		go reapChildren()
 	}
 
-	if fi, err := os.Stat("/etc/rc.local"); err != os.ErrNotExist {
+	if fi, err := os.Stat("/etc/rc.local"); os.IsExist(err) {
 		if !fi.IsDir() {
 			cmd := exec.Command("/bin/sh", "/etc/rc.local")
 

@@ -1,13 +1,13 @@
 #!/bin/sh
 
-curl -Ls https://dl.ngrok.com/ngrok_2.0.17_linux_amd64.zip | bsdtar -C /usr/local/bin -xvf- && chmod +x /usr/local/bin/ngrok
+curl -Ls https://dl.ngrok.com/ngrok_2.0.19_linux_amd64.zip | bsdtar -C /usr/local/bin -xvf- && chmod +x /usr/local/bin/ngrok
 
 vagrant plugin install vagrant-vbguest vagrant-share vagrant-foodshow vagrant-vbox-snapshot
 
 # VMWare
 vagrant plugin install vagrant-guests-photon
 vagrant plugin install vagrant-vmware-workstation
-vagrant plugin license vagrant-vmware-workstation ~/Dropbox/vagrant-workstation.lic
+vagrant plugin license vagrant-vmware-workstation ~/Private/licenses/vagrant-workstation-12-1.lic
 
 . /etc/os-release
 if [ "$ID" = arch ]; then

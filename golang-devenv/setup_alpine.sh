@@ -27,7 +27,6 @@ export PATH=/usr/local/go/bin:$PATH
 export GOPATH=/usr/local/share/go
 mkdir -p $GOPATH/src
 export PATH=/usr/local/share/go/bin:$PATH
-CGO_ENABLED=0 go build -a -installsuffix cgo
 
 echo '
 export GOPATH=/usr/local/share/go

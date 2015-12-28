@@ -77,7 +77,8 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "casualjim/archie-base"
+  config.vm.box = "casualjim/fedora23"
+  # config.vm.box = "casualjim/archie-base"
   # config.vm.synced_folder ".", "/vagrant", disabled: true
 
   # Disable automatic box update checking. If you disable this, then
@@ -119,6 +120,7 @@ Vagrant.configure(2) do |config|
     config.vm.provider vmw_p do |vmw|
       vmw.vmx["memsize"] = "2048"
       vmw.vmx["numvcpus"] = "2"
+      vmw.vmx["scsi0.virtualdev"] = "pvscsi"
     end
   end
 

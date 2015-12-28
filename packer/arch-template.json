@@ -4,7 +4,8 @@
 		"iso_checksum": "7de3315b1384e5d2769eca13453e87a8d303050e",
 		"iso_checksum_type": "sha1",
 		"version": "0.2.4",
-		"vagrant_cloud_token": "{{env `ATLAS_TOKEN`}}"
+		"vagrant_cloud_token": "{{env `ATLAS_TOKEN`}}",
+		"atlas-username": "{{env `ATLAS_USERNAME`}}"
 	},
 	"push": {
 		"name": "casualjim/arch-base"
@@ -94,8 +95,16 @@
 		"vcs": true
 	},
 	"post-processors": [{
-		"type": "vagrant",
-		"output": "packer_arch_{{.Provider}}.box"
+		"output": "fedora-23-x86_64-{{.Provider}}-{{user `box-version`}}.box",
+		"type": "vagrant"
+	}, {
+		"artifact": "{{user `atlas-username`}}/fedora23",
+		"artifact_type": "vagrant.box",
+		"metadata": {
+			"provider": "vmware_desktop",
+			"version": "{{user `box-version`}}"
+		},
+		"type": "atlas"
 	}]
 
 }

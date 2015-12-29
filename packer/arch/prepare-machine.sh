@@ -74,11 +74,12 @@ syslinux-install_update -iam -c /mnt
 sed -i "s|TIMEOUT.*|TIMEOUT 0|g" /mnt/boot/syslinux/syslinux.cfg
 sed -i "s/^UI/#UI/g" /mnt/boot/syslinux/syslinux.cfg
 sed -i "s|root=/dev/sda3 rw|root=${DISK}$rpn|g" /mnt/boot/syslinux/syslinux.cfg
-sed -i "s|quiet|quiet loglevel=3 vga=current|g" /mnt/boot/syslinux/syslinux.cfg
+sed -i "s|quiet|quiet loglevel=3 vga=current no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0|g" /mnt/boot/syslinux/syslinux.cfg
 
 # http://comments.gmane.org/gmane.linux.arch.general/48739
 echo '==> adding workaround for shutdown race condition'
 install --mode=0644 poweroff.timer "/mnt/etc/systemd/system/poweroff.timer"
+
 echo '==> configuring resolved'
 mv /mnt/etc/resolv.conf /mnt/etc/resolv.conf.old
 chroot /mnt ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf

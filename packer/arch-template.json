@@ -3,12 +3,9 @@
 		"iso_url": "http://mirrors.kernel.org/archlinux/iso/2015.12.01/archlinux-2015.12.01-dual.iso",
 		"iso_checksum": "7de3315b1384e5d2769eca13453e87a8d303050e",
 		"iso_checksum_type": "sha1",
-		"version": "0.2.4",
+		"version": "0.3.0",
 		"vagrant_cloud_token": "{{env `ATLAS_TOKEN`}}",
 		"atlas-username": "{{env `ATLAS_USERNAME`}}"
-	},
-	"push": {
-		"name": "casualjim/arch-base"
 	},
 	"builders": [{
 		"type": "qemu",
@@ -19,7 +16,7 @@
 		"shutdown_command": "systemctl start poweroff.timer",
 		"ssh_username": "root",
 		"ssh_password": "vagrant",
-		"disk_size": 40000,
+		"disk_size": 20000,
 		"boot_wait": "5s",
 		"boot_command": [
 			"<enter><wait10><wait10>",
@@ -40,7 +37,7 @@
 		"shutdown_command": "systemctl start poweroff.timer",
 		"ssh_username": "root",
 		"ssh_password": "vagrant",
-		"disk_size": 40000,
+		"disk_size": 20000,
 		"boot_wait": "5s",
 		"boot_command": [
 			"<enter><wait10><wait10>",
@@ -67,9 +64,17 @@
 			"curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/poweroff.timer<enter><wait>",
 			"DISK=/dev/sda bash ./prepare-machine.sh<enter>"
 		],
-		"disk_size": 40000,
+		"disk_size": 20000,
 		"ssh_username": "root",
-		"ssh_password": "vagrant"
+		"ssh_password": "vagrant",
+		"version": "11",
+		"vmx_data": {
+			"memsize": "512",
+			"numvcpus": "1",
+			"scsi0.virtualDev": "pvscsi",
+			"ethernet0.virtualDev": "vmxnet3",
+			"vhv.enable": "true"
+		}
 	}],
 	"provisioners": [{
 		"type": "file",
@@ -94,17 +99,21 @@
 		"name": "casualjim/archie-base",
 		"vcs": true
 	},
-	"post-processors": [{
-		"output": "fedora-23-x86_64-{{.Provider}}-{{user `box-version`}}.box",
-		"type": "vagrant"
-	}, {
-		"artifact": "{{user `atlas-username`}}/fedora23",
-		"artifact_type": "vagrant.box",
-		"metadata": {
-			"provider": "vmware_desktop",
-			"version": "{{user `box-version`}}"
-		},
-		"type": "atlas"
-	}]
-
+	"post-processors": [
+		[{
+			"output": "archie-base-x86_64-{{.Provider}}-{{user `version`}}.box",
+			"type": "vagrant"
+		}, {
+			"artifact": "{{user `atlas-username`}}/archie-base",
+			"artifact_type": "vagrant.box",
+			"metadata": {
+				"provider": "vmware_desktop",
+				"version": "{{user `version`}}"
+			},
+			"type": "atlas"
+		}]
+	],
+	"push": {
+		"name": "casualjim/archie-base"
+	}
 }

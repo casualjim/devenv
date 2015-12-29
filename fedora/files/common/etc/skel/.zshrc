@@ -2,7 +2,7 @@ export SHELL=/bin/zsh
 export OS=`uname`
 
 if [ `id -u` = 0 ]; then
-  ZGEN_DIR=/etc/zgen
+  ZGEN_DIR=/usr/share/zsh/scripts/zgen
 fi
 
 zmodload zsh/terminfo

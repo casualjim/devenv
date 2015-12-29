@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pacman -Syyu
+
 FQDN='vbox-arch'
 KEYMAP='us'
 LANGUAGE='en_US.UTF-8'
@@ -19,6 +21,7 @@ sed -i 's/#${LANGUAGE}/${LANGUAGE}/' /etc/locale.gen
 locale-gen
 
 echo "==> configuring network"
+mkdir -p /etc/systemd/network
 echo '[Match]
 Name=eth* en*
 [Network]
@@ -46,6 +49,13 @@ usermod -p ${PASSWORD} root
 
 echo "===> disabling fsck for btrfs volumes"
 systemctl mask systemd-fsck-root.service
+
+# Tell udev to disable the assignment of fixed network interface names
+# http://freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
+# in the cloud or on vagrant eth0 is very much the default ethernet adapter
+# we don't want it to be tied to the hardware
+echo "===> disabling assignment of fixed hardware based network names"
+ln --symbolic /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
 echo "===> configuring cpio"
 echo '

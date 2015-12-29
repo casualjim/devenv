@@ -1,3 +1,5 @@
+set -x -o pipefail
+
 PASSWORD=$(/usr/bin/openssl passwd -crypt 'vagrant')
 
 pacman -S --noconfirm git vim

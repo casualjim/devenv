@@ -15,72 +15,17 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-# Print pretty colors to stdout in Blue.
-function ppinfo() {
-  while getopts ":i" opt; do
-    [[ $opt == "i" ]] && has_option=1
-  done
-  if [[ -n $has_option ]]; then
-    shift && printf '\033[0;34m%s\033[0m' "$@"
-  else
-    printf '\033[0;34m%s\033[0m\n' "$@"
-  fi
-}
-
-# Print pretty colors to stdout in Green.
-function ppsuccess() {
-  while getopts ":i" opt; do
-    [[ $opt == "i" ]] && has_option=1
-  done
-  if [[ -n $has_option ]]; then
-    shift && printf '\033[0;32m%s\033[0m' "$@"
-  else
-    printf '\033[0;32m%s\033[0m\n' "$@"
-  fi
-}
-
-# Print pretty colors to stdout in Purple.
-function ppemphasis() {
-  while getopts ":i" opt; do
-    [[ $opt == "i" ]] && has_option=1
-  done
-  if [[ -n $has_option ]]; then
-    shift && printf '\033[0;35m%s\033[0m' "$@"
-  else
-    printf '\033[0;35m%s\033[0m\n' "$@"
-  fi
-}
-
-# Print pretty colors to stdout in Brown.
-function ppwarning() {
-  while getopts ":i" opt; do
-    [[ $opt == "i" ]] && has_option=1
-  done
-  if [[ -n $has_option ]]; then
-    shift && printf '\033[0;33m%s\033[0m' "$@"
-  else
-    printf '\033[0;33m%s\033[0m\n' "$@"
-  fi
-}
-
-# Print pretty colors to stdout in Red.
-function ppdanger() {
-  while getopts ":i" opt; do
-    [[ $opt == "i" ]] && has_option=1
-  done
-  if [[ -n $has_option ]]; then
-    shift && printf '\033[0;31m%s\033[0m' "$@"
-  else
-    printf '\033[0;31m%s\033[0m\n' "$@"
-  fi
-}
-
+. "$DIR/_logging.sh"
 
 install_remote_binary() {
   ppinfo "installing $1 from $2"
   curl -o "/usr/bin/$1" -L'#' "$2"
   chmod +x "/usr/bin/$1"
   ppsuccess "installed $1"
+}
+
+install_aur() {
+  curl -L'#' https://aur.archlinux.org/packages/$1/$2/$2.tar.gz | tar -C / -xz
 }
 
 
@@ -114,14 +59,12 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
   go get -u github.com/jteeuwen/go-bindata/...
   go get -u github.com/elazarl/go-bindata-assetfs/...
   ppsuccess "====> installed bindata"
-  go get -u github.com/sqs/goreturns
-  ppsuccess "====> installed goreturns"
   go get -u github.com/pquerna/ffjson
   ppsuccess "====> installed ffjson"
   go get -u github.com/clipperhouse/gen
   ppsuccess "====> installed clipperhouse gen"
-  go get -u code.google.com/p/gomock/gomock
-  go get -u code.google.com/p/gomock/mockgen
+  go get -u github.com/golang/mock/gomock
+  go get -u github.com/golang/mock/mockgen
   ppsuccess "====> installed gomock"
   go get -u github.com/axw/gocov/gocov
   go get -u gopkg.in/matm/v1/gocov-html
@@ -140,6 +83,8 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
   go get -u github.com/gogo/protobuf/protoc-gen-gogo
   go get -u github.com/gogo/protobuf/gogoproto
   ppsuccess "====> installed gogoproto"
+  go get -u github.com/constabulary/gb/...
+  ppsuccess "====> installed gb"
   go get -u github.com/mitchellh/gox
   ppsuccess "====> installed gox"
   go get -u github.com/derekparker/delve/cmd/dlv
@@ -214,6 +159,6 @@ if [[ -e "${PERSONAL}" ]]; then
 
   script -qc "vim -e +qall" /dev/null > /dev/null
   cd $HOME/.vim/bundle/YouCompleteMe
-  ./install.sh --clang-completer --gocode-completer
+  python2 ./install.py --clang-completer --gocode-completer --tern-completer
   . $HOME/.zshrc
 fi

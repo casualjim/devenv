@@ -1,9 +1,9 @@
 {
 	"variables": {
-		"iso_url": "http://mirrors.kernel.org/archlinux/iso/2015.12.01/archlinux-2015.12.01-dual.iso",
-		"iso_checksum": "7de3315b1384e5d2769eca13453e87a8d303050e",
+		"iso_url": "http://mirrors.kernel.org/archlinux/iso/2016.01.01/archlinux-2016.01.01-dual.iso",
+		"iso_checksum": "ff79a9629a83dfedad6c3a58e2e7838c86282315",
 		"iso_checksum_type": "sha1",
-		"version": "0.3.0",
+		"version": "0.3.3",
 		"vagrant_cloud_token": "{{env `ATLAS_TOKEN`}}",
 		"atlas-username": "{{env `ATLAS_USERNAME`}}"
 	},
@@ -19,7 +19,7 @@
 		"disk_size": 20000,
 		"boot_wait": "5s",
 		"boot_command": [
-			"<enter><wait10><wait10>",
+			"<tab> net.ifnames=0<enter><wait10><wait10>",
 			"curl -o /etc/pacman.conf http://{{.HTTPIP}}:{{.HTTPPort}}/pacman.conf<enter><wait>",
 			"curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/prepare-machine.sh<enter><wait>",
 			"curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/install-stage-1.sh<enter><wait>",
@@ -40,7 +40,7 @@
 		"disk_size": 20000,
 		"boot_wait": "5s",
 		"boot_command": [
-			"<enter><wait10><wait10>",
+			"<tab> net.ifnames=0<enter><wait10><wait10>",
 			"curl -o /etc/pacman.conf http://{{.HTTPIP}}:{{.HTTPPort}}/pacman.conf<enter><wait>",
 			"curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/prepare-machine.sh<enter><wait>",
 			"curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/install-stage-1.sh<enter><wait>",
@@ -57,7 +57,7 @@
 		"guest_os_type": "other3xlinux-64",
 		"shutdown_command": "systemctl start poweroff.timer",
 		"boot_command": [
-			"<enter><wait10><wait10>",
+			"<tab> net.ifnames=0<enter><wait10><wait10>",
 			"curl -o /etc/pacman.conf http://{{.HTTPIP}}:{{.HTTPPort}}/pacman.conf<enter><wait>",
 			"curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/prepare-machine.sh<enter><wait>",
 			"curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/install-stage-1.sh<enter><wait>",
@@ -71,8 +71,8 @@
 		"vmx_data": {
 			"memsize": "512",
 			"numvcpus": "1",
-			"scsi0.virtualDev": "pvscsi",
 			"ethernet0.virtualDev": "vmxnet3",
+			"scsi0.virtualDev": "pvscsi",
 			"vhv.enable": "true"
 		}
 	}],
@@ -104,10 +104,29 @@
 			"output": "archie-base-x86_64-{{.Provider}}-{{user `version`}}.box",
 			"type": "vagrant"
 		}, {
+			"only": ["qemu"],
+			"artifact": "{{user `atlas-username`}}/archie-base",
+			"artifact_type": "vagrant.box",
+			"metadata": {
+				"provider": "libvirt",
+				"version": "{{user `version`}}"
+			},
+			"type": "atlas"
+		}, {
+			"only": ["vmware-iso"],
 			"artifact": "{{user `atlas-username`}}/archie-base",
 			"artifact_type": "vagrant.box",
 			"metadata": {
 				"provider": "vmware_desktop",
+				"version": "{{user `version`}}"
+			},
+			"type": "atlas"
+		}, {
+			"only": ["virtualbox-iso"],
+			"artifact": "{{user `atlas-username`}}/archie-base",
+			"artifact_type": "vagrant.box",
+			"metadata": {
+				"provider": "virtualbox",
 				"version": "{{user `version`}}"
 			},
 			"type": "atlas"
